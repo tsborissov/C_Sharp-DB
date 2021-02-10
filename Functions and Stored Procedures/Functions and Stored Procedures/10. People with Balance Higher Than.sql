@@ -23,4 +23,16 @@ ORDER BY ah.FirstName, ah.LastName
 
 GO
 
-EXEC usp_GetHoldersWithBalanceHigherThan 10000
+EXEC usp_GetHoldersWithBalanceHigherThan_ver2 10000
+
+GO
+
+CREATE PROC usp_GetHoldersWithBalanceHigherThan_ver2 (@AccountsBalanceTreshold MONEY)
+AS
+	SELECT ah.FirstName, ah.LastName
+		FROM AccountHolders AS ah
+		JOIN Accounts AS a ON a.AccountHolderId = ah.Id
+	GROUP BY ah.FirstName, ah.LastName
+	HAVING SUM(a.Balance) > @AccountsBalanceTreshold
+ORDER BY ah.FirstName, ah.LastName
+
